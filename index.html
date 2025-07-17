@@ -1,0 +1,81 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Weather App</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      background: #e0f7fa;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      height: 100vh;
+      margin: 0;
+    }
+
+    .box {
+      background: white;
+      padding: 20px;
+      border-radius: 10px;
+      text-align: center;
+      box-shadow: 0 0 10px rgba(0,0,0,0.1);
+      width: 300px;
+    }
+
+    input, button {
+      padding: 10px;
+      margin: 10px 5px;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+      font-size: 14px;
+    }
+
+    button {
+      background-color: #00bcd4;
+      color: white;
+      cursor: pointer;
+    }
+
+    img {
+      height: 40px;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="box">
+    <h2>Weather App</h2>
+    <input type="text" id="city" placeholder="Enter city" />
+    <button onclick="getWeather()">Search</button>
+    <div id="result"></div>
+  </div>
+
+  <script>
+    async function getWeather() {
+      const city = document.getElementById("city").value;
+      const result = document.getElementById("result");
+
+      if (!city) {
+        result.innerHTML = "<p>Please enter a city name.</p>";
+        return;
+      }
+
+      try {
+        const res = await fetch(`http://api.weatherapi.com/v1/current.json?key=1a65e8f1d1294f8a81b11427251707&q=${city}`);
+        const data = await res.json();
+
+        result.innerHTML = `
+          <h3>${data.location.name}, ${data.location.country}</h3>
+          <p>${data.current.temp_c}°C, ${data.current.condition.text}</p>
+          <img src="${data.current.condition.icon}" alt="icon" />
+        `;
+      } catch (error) {
+        result.innerHTML = "<p>City not found. Try again.</p>";
+      }
+    }
+  </script>
+
+</body>
+</html>
